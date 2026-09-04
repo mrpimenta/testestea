@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <title>Mapa Neurocognitivo</title>
+  <style>
+    :root{--bg:#f5f7fb;--surface:#fff;--text:#162033;--muted:#667085;--line:#dfe5ee;--accent:#3157d5;--accent-soft:#eaf0ff;--ok:#087a55;--warn:#b76a00;--danger:#b42318;--shadow:0 14px 42px rgba(16,24,40,.08);--radius:18px}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,textarea{font:inherit} button{cursor:pointer}
+    .shell{max-width:1120px;margin:0 auto;padding:28px 20px 64px}
+    header{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:28px}.brand h1{font-size:clamp(28px,4vw,46px);line-height:1.05;margin:0 0 10px}.brand p{margin:0;color:var(--muted);max-width:760px}.tag{border:1px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:999px;color:var(--muted);font-size:13px;white-space:nowrap}
+    .notice{background:#fff8e7;border:1px solid #f4d28a;border-radius:16px;padding:16px 18px;margin-bottom:24px}.notice strong{display:block;margin-bottom:4px}.notice p{margin:0;color:#684c18}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}.btn{border:0;border-radius:12px;padding:11px 15px;font-weight:700;background:var(--accent);color:white}.btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--line)}.btn.ghost{background:transparent;color:var(--accent);border:1px solid #b9c7f8}.btn:disabled{opacity:.5;cursor:not-allowed}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:760px){.grid{grid-template-columns:1fr}header{display:block}.tag{display:inline-block;margin-top:14px}}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 1px 0 rgba(16,24,40,.02)}.card h2,.card h3{margin:0 0 8px}.card p{margin:0;color:var(--muted)}.domain-card{display:flex;gap:16px;justify-content:space-between;align-items:center;min-height:146px}.domain-copy{max-width:75%}.domain-meta{font-size:13px;color:var(--muted);margin-top:10px}.score-pill{min-width:76px;text-align:center;border-radius:14px;padding:12px 10px;background:var(--accent-soft);color:var(--accent);font-weight:800}.score-pill small{display:block;font-weight:600;font-size:11px;color:var(--muted);margin-top:2px}
+    .progress-wrap{margin:18px 0 28px}.progress-top{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:7px}.progress{height:9px;background:#e8ecf3;border-radius:999px;overflow:hidden}.progress>span{height:100%;display:block;background:var(--accent);width:0;transition:width .25s ease}
+    .question{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:12px}.question legend{font-weight:750;padding:0 6px}.options{display:grid;gap:8px;margin-top:12px}.option{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fbfcfe}.option:hover{border-color:#b7c4e8;background:#f7f9ff}.option input{margin-top:4px}.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.scale label{border:1px solid var(--line);border-radius:11px;padding:10px 8px;text-align:center;font-size:13px;background:#fbfcfe}.scale input{display:block;margin:0 auto 6px}@media(max-width:600px){.scale{grid-template-columns:1fr 1fr}}
+    .section-title{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:12px}.section-title h2{margin:0}.section-title p{margin:0;color:var(--muted)}
+    .result-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}@media(max-width:850px){.result-layout{grid-template-columns:1fr}}.result-row{margin:16px 0}.result-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px}.bar{height:12px;background:#e8ecf3;border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent)}.interpret{padding:14px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);margin-top:14px}.interpret p{margin:0;color:var(--muted)}
+    .empty{padding:34px;text-align:center;color:var(--muted)} footer{margin-top:34px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:18px}.hidden{display:none!important}.kicker{font-size:13px;color:var(--muted);margin-bottom:4px}.answer-note{margin-top:12px;color:var(--muted);font-size:13px}.text-answer{width:100%;min-height:100px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical}.divider{height:1px;background:var(--line);margin:18px 0}.small{font-size:13px;color:var(--muted)}
+    @media print{body{background:white}.toolbar,.notice,#dashboard,#testView button,footer{display:none!important}.shell{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand"><h1>Mapa Neurocognitivo</h1><p>Bateria digital exploratória para organizar sinais, dificuldades percebidas e desempenho em tarefas breves. Os itens desta versão são originais e não reproduzem instrumentos clínicos padronizados.</p></div>
+      <span class="tag">v0.1 • dados locais</span>
+    </header>
+
+    <div class="notice"><strong>Importante</strong><p>Este aplicativo não calcula QI, não diagnostica TEA, TDAH, depressão, ansiedade ou qualquer outra condição e não substitui avaliação neuropsicológica. Resultados altos ou baixos servem apenas para organizar informações que podem ser levadas a um profissional.</p></div>
+
+    <div class="toolbar">
+      <button class="btn" id="showDashboard">Visão geral</button>
+      <button class="btn secondary" id="showResults">Resultados</button>
+      <button class="btn secondary" id="printResults">Imprimir relatório</button>
+      <button class="btn ghost" id="clearData">Apagar respostas</button>
+    </div>
+
+    <section id="dashboard">
+      <div class="section-title"><div><h2>Áreas</h2><p>Faça cada bloco separadamente. Você pode fechar a página e continuar depois.</p></div></div>
+      <div class="grid" id="domainGrid"></div>
+    </section>
+
+    <section id="testView" class="hidden">
+      <div class="section-title"><div><div class="kicker" id="testType"></div><h2 id="testTitle"></h2><p id="testDescription"></p></div><button class="btn secondary" id="backBtn">Voltar</button></div>
+      <div class="progress-wrap"><div class="progress-top"><span id="progressLabel"></span><span id="progressPct"></span></div><div class="progress"><span id="progressBar"></span></div></div>
+      <form id="testForm"></form>
+      <button class="btn" id="saveTest" type="button">Salvar este bloco</button>
+      <p class="answer-note">Responda com base no seu funcionamento habitual. Quando uma pergunta falar de infância, considere aproximadamente até os 12 anos.</p>
+    </section>
+
+    <section id="resultsView" class="hidden">
+      <div class="section-title"><div><h2>Seu mapa</h2><p>Desempenho e autorrelato são mostrados separadamente porque não têm o mesmo significado.</p></div></div>
+      <div id="resultsContent"></div>
+    </section>
+
+    <footer>Privacidade: esta versão não envia respostas para servidor. Os dados ficam apenas no armazenamento local deste navegador. Evite usar um computador compartilhado se não quiser que outra pessoa veja suas respostas.</footer>
+  </main>
+
+<script>
+const SCALE = ['Nunca ou quase nunca','Às vezes','Frequentemente','Quase sempre'];
+const domains = [
+  {
+    id:'reasoning', title:'Raciocínio', kind:'performance', label:'Tarefa de desempenho',
+    description:'Relações lógicas, padrões e raciocínio verbal. Não é teste de QI e não usa normas populacionais.',
+    items:[
+      {q:'Qual opção completa melhor a sequência: 3, 6, 12, 24, ___?',o:['30','36','42','48'],a:3},
+      {q:'Livro está para leitura assim como garfo está para:',o:['cozinha','metal','alimentação','prato'],a:2},
+      {q:'Se todo NARO é azul e nenhum objeto azul é transparente, qual afirmação é necessariamente verdadeira?',o:['Algum NARO é transparente','Nenhum NARO é transparente','Todo transparente é NARO','Não é possível concluir'],a:1},
+      {q:'Qual número destoa mais do conjunto: 16, 25, 36, 49, 63, 64?',o:['16','36','49','63'],a:3},
+      {q:'Uma máquina produz 8 peças em 4 minutos, em ritmo constante. Quantas produz em 15 minutos?',o:['24','28','30','32'],a:2},
+      {q:'Se A é mais alto que B, B é mais alto que C e D é mais alto que A, quem é o mais alto?',o:['A','B','C','D'],a:3}
+    ]
+  },
+  {
+    id:'attention', title:'Atenção', kind:'performance', label:'Tarefa de desempenho',
+    description:'Busca visual, manutenção de regra e resistência a distrações em tarefas breves.',
+    items:[
+      {q:'Encontre o diferente: O O O O 0 O O O',o:['posição 3','posição 5','posição 6','posição 8'],a:1},
+      {q:'Quantas letras A existem em “BANANA AMARELA” ?',o:['5','6','7','8'],a:1},
+      {q:'Siga apenas a regra: marque o número ÍMPAR imediatamente depois de um número PAR. Sequência: 3, 8, 5, 7, 2, 9, 4, 6.',o:['5','7','9','6'],a:2},
+      {q:'Qual par é exatamente igual?',o:['M7Q2P / M7O2P','BR4K8 / BR4K8','X9L1S / X9I1S','T6V3N / T6V8N'],a:1},
+      {q:'Leia com cuidado: escolha a palavra que aparece DUAS vezes: ponte, vela, mesa, chuva, vela, chave.',o:['ponte','vela','chuva','chave'],a:1},
+      {q:'Qual sequência mantém a regra letra-número-letra-número?',o:['A2B4C6','A2B4C','A22B4C','2AB4C6'],a:0}
+    ]
+  },
+  {
+    id:'executive', title:'Funções executivas', kind:'performance', label:'Tarefa de desempenho',
+    description:'Flexibilidade de regra, inibição de resposta automática e planejamento simples.',
+    items:[
+      {q:'Regra: se o número for PAR, escolha “A”; se for ÍMPAR, escolha “B”. Número: 17',o:['A','B'],a:1},
+      {q:'Agora inverta a regra: PAR = B e ÍMPAR = A. Número: 24',o:['A','B'],a:1},
+      {q:'Você precisa fazer três coisas: buscar um documento que fica pronto às 14h, chegar a uma reunião às 14h30 e o trajeto documento→reunião leva 20 min. Qual plano é mais seguro?',o:['Ir à reunião primeiro','Buscar às 14h e sair até 14h10','Buscar às 14h20','Deixar para outro dia sem verificar'],a:1},
+      {q:'Regra: escolha a COR escrita, não o significado da palavra. A palavra “AZUL” está indicada como VERMELHA. O que deve escolher?',o:['Azul','Vermelha'],a:1},
+      {q:'Se uma estratégia falhou três vezes pelo mesmo motivo, qual ação mostra maior flexibilidade?',o:['Repetir igual mais rápido','Mudar uma variável e observar o resultado','Abandonar qualquer tentativa','Ignorar o motivo da falha'],a:1},
+      {q:'Você tem 30 minutos para duas tarefas de 20 minutos. Qual resposta é mais adequada?',o:['Prometer concluir ambas','Priorizar uma e renegociar a outra','Começar ambas ao mesmo tempo','Evitar decidir até o tempo acabar'],a:1}
+    ]
+  },
+  {
+    id:'memory', title:'Memória', kind:'performance', label:'Tarefa de desempenho',
+    description:'Reconhecimento e associação de informações apresentadas dentro do próprio bloco.',
+    intro:'Antes de responder, memorize por cerca de 20 segundos estas seis palavras: NUVEM, CHAVE, LIMÃO, PONTE, VELA, CINEMA. Depois role a página e responda sem voltar à lista se puder.',
+    items:[
+      {q:'Qual destas palavras estava na lista?',o:['janela','chave','folha','relógio'],a:1},
+      {q:'Qual destas palavras NÃO estava na lista?',o:['ponte','vela','cinema','barco'],a:3},
+      {q:'Qual par contém duas palavras da lista?',o:['limão e nuvem','chave e vidro','cinema e praça','ponte e rio'],a:0},
+      {q:'Qual palavra relacionada a iluminação estava na lista?',o:['lâmpada','vela','sol','farol'],a:1},
+      {q:'Qual palavra relacionada a local de exibição estava na lista?',o:['teatro','museu','cinema','arena'],a:2},
+      {q:'Quantas palavras havia na lista original?',o:['4','5','6','8'],a:2}
+    ]
+  },
+  {
+    id:'language', title:'Linguagem', kind:'performance', label:'Tarefa de desempenho',
+    description:'Compreensão de contexto, inferência e organização do significado em situações cotidianas.',
+    items:[
+      {q:'“Quando Paulo chegou, a reunião já tinha terminado.” O que podemos concluir?',o:['Paulo chegou antes do início','Paulo chegou depois do fim','Paulo cancelou a reunião','A reunião não aconteceu'],a:1},
+      {q:'Em “Ela respondeu de forma objetiva, sem rodeios”, “sem rodeios” significa:',o:['sem caminhar','sem explicar nada','de modo direto','com irritação'],a:2},
+      {q:'Alguém diz “Que ótimo...” após receber uma notícia claramente ruim. O sentido pode depender principalmente de:',o:['ortografia','ironia e contexto','plural','tempo verbal'],a:1},
+      {q:'Qual frase organiza melhor uma instrução?',o:['Depois antes faça isso','Primeiro desligue, depois desconecte o cabo','Cabo primeiro depois talvez','Desligue porque depois antes'],a:1},
+      {q:'Se uma pessoa responde apenas ao sentido literal de uma piada, qual aspecto da linguagem pode estar mais envolvido?',o:['caligrafia','pragmática/contexto social','fonética isolada','acentuação'],a:1},
+      {q:'Qual resumo preserva melhor a ideia “Apesar da chuva, o evento ocorreu e teve boa participação”?',o:['O evento foi cancelado pela chuva','Choveu e ninguém participou','O evento aconteceu e teve boa adesão mesmo com chuva','A participação causou a chuva'],a:2}
+    ]
+  },
+  {
+    id:'social', title:'Cognição social / traços associados ao TEA', kind:'signal', label:'Autorrelato • itens originais',
+    description:'Reciprocidade, leitura de contexto social, necessidade de previsibilidade e padrões repetitivos. Não é SRS-2 nem AQ-10.',
+    items:[
+      'Tenho dificuldade de perceber quando é minha vez de falar em uma conversa em grupo.',
+      'Preciso analisar conscientemente regras sociais que parecem intuitivas para outras pessoas.',
+      'Mudanças inesperadas de plano me desorganizam mais do que parece acontecer com a maioria das pessoas ao meu redor.',
+      'Costumo preferir assuntos específicos e posso falar deles por bastante tempo sem perceber se o outro perdeu o interesse.',
+      'Às vezes interpreto frases de forma literal e só depois percebo ironia, indireta ou duplo sentido.',
+      'Ambientes sociais com muitas conversas simultâneas me deixam sobrecarregado ou confuso.',
+      'Tenho dificuldade de manter contato social frequente mesmo quando gosto das pessoas.',
+      'Ensaiar mentalmente conversas antes que aconteçam é comum para mim.',
+      'Depois de interações sociais, reviso o que falei tentando entender se agi de forma adequada.',
+      'Tenho rotinas ou maneiras específicas de fazer certas coisas e fico muito incomodado quando não consigo segui-las.',
+      'Desde mais jovem, eu me sentia diferente ou fora do ritmo social dos colegas.',
+      'Às vezes imito comportamentos sociais de outras pessoas para parecer mais natural na interação.'
+    ]
+  },
+  {
+    id:'adhd', title:'Sinais associados ao TDAH', kind:'signal', label:'Autorrelato • itens originais',
+    description:'Desatenção, impulsividade, organização e regulação de tarefas. Não reproduz escalas clínicas padronizadas.',
+    items:[
+      'Começo tarefas importantes e me distraio antes de terminá-las.',
+      'Perco prazos, objetos ou compromissos por falhas de organização.',
+      'Tenho dificuldade de sustentar atenção em tarefas longas ou pouco estimulantes.',
+      'Interrompo outras pessoas ou respondo antes de elas terminarem a pergunta.',
+      'Adio tarefas simples até que se tornem urgentes.',
+      'Minha atenção varia muito conforme o quanto o assunto me interessa.',
+      'Tenho dificuldade de dividir projetos grandes em etapas executáveis.',
+      'Mudo de atividade por impulso mesmo quando pretendia terminar a anterior.',
+      'Preciso de lembretes externos para manter rotinas e compromissos.',
+      'Cometo erros por pressa mesmo sabendo como fazer a tarefa.',
+      'Fico inquieto quando preciso permanecer sem atividade por muito tempo.',
+      'É difícil estimar quanto tempo uma tarefa realmente vai levar.'
+    ]
+  },
+  {
+    id:'mood', title:'Ansiedade e humor', kind:'signal', label:'Autorrelato de contexto',
+    description:'Verifica se tensão emocional, preocupação e redução de interesse podem estar afetando o funcionamento. Não é inventário diagnóstico.',
+    items:[
+      'Preocupações ocupam minha mente mesmo quando tento focar em outra coisa.',
+      'Tenho dificuldade de relaxar por antecipar problemas.',
+      'Evito situações por receio de errar, ser julgado ou não saber como agir.',
+      'Meu sono é prejudicado por pensamentos ou preocupações.',
+      'Tenho sentido menos interesse ou prazer em atividades que normalmente gosto.',
+      'Sinto cansaço mental que atrapalha tarefas simples.',
+      'Quando fico ansioso, minha atenção e memória pioram claramente.',
+      'Meu humor interfere no trabalho, estudo, relações ou autocuidado.'
+    ]
+  },
+  {
+    id:'behavior', title:'Personalidade e comportamento', kind:'profile', label:'Perfil descritivo',
+    description:'Tendências gerais de rotina, sociabilidade, sensibilidade e estilo de decisão. Este bloco não produz classificação clínica.',
+    items:[
+      'Prefiro planejar com antecedência a improvisar.',
+      'Preciso de períodos sozinho para recuperar energia depois de muita interação.',
+      'Percebo detalhes e inconsistências que outras pessoas às vezes ignoram.',
+      'Tendo a pensar bastante antes de tomar decisões importantes.',
+      'Situações ambíguas me incomodam mais do que regras claras.',
+      'Consigo mudar de opinião com facilidade quando aparecem novas evidências.',
+      'Costumo perceber rapidamente o estado emocional das pessoas pela expressão e pelo tom de voz.',
+      'Gosto de explorar atividades novas mesmo sem saber exatamente o que vai acontecer.',
+      'Críticas ficam na minha cabeça por bastante tempo.',
+      'Em conflitos, prefiro argumentos objetivos a sinais indiretos.'
+    ]
+  },
+  {
+    id:'development', title:'História do desenvolvimento', kind:'history', label:'História desde a infância',
+    description:'Organiza sinais precoces e continuidade ao longo da vida. Quando possível, vale comparar com lembranças de familiares.',
+    items:[
+      'Na infância, eu tinha dificuldade de entrar ou permanecer em brincadeiras de grupo.',
+      'Eu era frequentemente descrito como muito quieto, “no meu mundo”, sério demais ou socialmente deslocado.',
+      'Tive interesses muito intensos ou específicos para a idade.',
+      'Mudanças de rotina, escola, professor, trajeto ou planos me afetavam bastante.',
+      'Eu tinha dificuldade de entender brincadeiras, provocações, ironias ou intenções de colegas.',
+      'Preferia brincar sozinho ou com uma pessoa por vez em vez de grupos grandes.',
+      'Eu repetia movimentos, frases, sons, sequências ou rituais para me acalmar ou por prazer.',
+      'Tinha sensibilidades marcantes a barulho, textura, cheiro, luz, roupas ou alimentos.',
+      'Havia grande diferença entre meu desempenho em assuntos de interesse e tarefas que não me prendiam atenção.',
+      'Eu esquecia materiais, deveres ou instruções com frequência apesar de entender o conteúdo.',
+      'Adultos diziam que eu interrompia, era impulsivo, inquieto ou “viajava” durante explicações.',
+      'As dificuldades sociais ou de atenção começaram antes da vida adulta.'
+    ]
+  }
+];
+
+const state = JSON.parse(localStorage.getItem('neuromap-v1') || '{}');
+let activeDomain = null;
+
+const $ = s => document.querySelector(s);
+function persist(){ localStorage.setItem('neuromap-v1', JSON.stringify(state)); }
+function completed(d){ return !!state[d.id]; }
+function typeHelp(d){
+  if(d.kind==='performance') return 'Percentual de acertos nesta tarefa, sem comparação normativa.';
+  if(d.kind==='signal') return 'Frequência autorrelatada de sinais neste domínio.';
+  if(d.kind==='history') return 'Quantidade de sinais retrospectivos marcados como presentes.';
+  return 'Perfil descritivo sem classificação clínica.';
+}
+function renderDashboard(){
+  $('#dashboard').classList.remove('hidden'); $('#testView').classList.add('hidden'); $('#resultsView').classList.add('hidden');
+  $('#domainGrid').innerHTML = domains.map(d=>{
+    const r=state[d.id]; const score=r?.score;
+    return `<article class="card domain-card"><div class="domain-copy"><h3>${d.title}</h3><p>${d.description}</p><div class="domain-meta">${d.label} • ${d.items.length} itens</div></div><div><div class="score-pill">${score==null?'—':Math.round(score)+'%'}<small>${completed(d)?'concluído':'pendente'}</small></div><button class="btn secondary" style="margin-top:10px;width:100%" onclick="openDomain('${d.id}')">${completed(d)?'Refazer':'Iniciar'}</button></div></article>`
+  }).join('');
+}
+function renderQuestion(d,item,i){
+  if(d.kind==='performance') return `<fieldset class="question"><legend>${i+1}. ${item.q}</legend><div class="options">${item.o.map((x,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}" required> <span>${x}</span></label>`).join('')}</div></fieldset>`;
+  if(d.kind==='history') return `<fieldset class="question"><legend>${i+1}. ${item}</legend><div class="options"><label class="option"><input type="radio" name="q${i}" value="1" required> Sim / provavelmente sim</label><label class="option"><input type="radio" name="q${i}" value="0" required> Não / provavelmente não</label><label class="option"><input type="radio" name="q${i}" value="x" required> Não sei / não lembro</label></div></fieldset>`;
+  return `<fieldset class="question"><legend>${i+1}. ${item}</legend><div class="scale">${SCALE.map((x,j)=>`<label><input type="radio" name="q${i}" value="${j}" required>${x}</label>`).join('')}</div></fieldset>`;
+}
+window.openDomain = function(id){
+  activeDomain = domains.find(d=>d.id===id);
+  const d=activeDomain; $('#dashboard').classList.add('hidden'); $('#resultsView').classList.add('hidden'); $('#testView').classList.remove('hidden');
+  $('#testType').textContent=d.label; $('#testTitle').textContent=d.title; $('#testDescription').textContent=d.description;
+  $('#progressLabel').textContent = state[d.id] ? 'Bloco já respondido — você pode refazer' : 'Novo bloco';
+  $('#progressPct').textContent = `${d.items.length} itens`; $('#progressBar').style.width=state[d.id]?'100%':'12%';
+  $('#testForm').innerHTML = `${d.intro?`<div class="notice"><strong>Memorize antes de continuar</strong><p>${d.intro}</p></div>`:''}${d.items.map((item,i)=>renderQuestion(d,item,i)).join('')}`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function calcAndSave(){
+  const d=activeDomain; if(!d) return;
+  const form=$('#testForm'); if(!form.reportValidity()) return;
+  const values=d.items.map((_,i)=>new FormData(form).get(`q${i}`));
+  let score=0, answered=values.length, detail={};
+  if(d.kind==='performance'){
+    const correct=values.reduce((n,v,i)=>n+(Number(v)===d.items[i].a?1:0),0); score=correct/d.items.length*100; detail={correct,total:d.items.length};
+  } else if(d.kind==='history'){
+    const known=values.filter(v=>v!=='x'); const yes=known.filter(v=>v==='1').length; score=known.length?yes/known.length*100:0; detail={yes,known:known.length,unknown:values.length-known.length};
+  } else {
+    const total=values.reduce((n,v)=>n+Number(v),0); score=total/(d.items.length*3)*100; detail={raw:total,max:d.items.length*3};
+  }
+  state[d.id]={score,detail,values,updatedAt:new Date().toISOString()}; persist();
+  $('#progressBar').style.width='100%'; $('#progressLabel').textContent='Bloco salvo';
+  renderResults(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function levelText(d,score){
+  if(d.kind==='performance'){
+    if(score>=80) return 'Bom desempenho nesta tarefa breve. Isso não equivale a percentil, QI ou resultado neuropsicológico padronizado.';
+    if(score>=55) return 'Desempenho intermediário nesta tarefa breve. Sono, ansiedade, familiaridade e condições do ambiente podem influenciar.';
+    return 'Houve mais erros nesta tarefa breve. O dado isolado não permite concluir déficit cognitivo.';
+  }
+  if(d.kind==='profile') return 'Este valor apenas resume a frequência das tendências marcadas; não existe faixa clínica neste bloco.';
+  if(score>=67) return 'Você marcou muitos itens deste domínio como frequentes/presentes. Pode valer a pena explorar exemplos concretos e impacto funcional com um profissional.';
+  if(score>=34) return 'Há alguns sinais neste domínio. O contexto, a intensidade e a presença desde a infância são importantes para interpretar.';
+  return 'Poucos itens foram marcados como frequentes/presentes neste bloco. Isso não exclui uma condição nem substitui entrevista clínica.';
+}
+function renderResults(){
+  $('#dashboard').classList.add('hidden'); $('#testView').classList.add('hidden'); $('#resultsView').classList.remove('hidden');
+  const done=domains.filter(completed);
+  if(!done.length){ $('#resultsContent').innerHTML='<div class="card empty">Ainda não há blocos concluídos.</div>'; return; }
+  const perf=done.filter(d=>d.kind==='performance'); const reports=done.filter(d=>d.kind!=='performance');
+  const rows=arr=>arr.map(d=>{const s=state[d.id].score;return `<div class="result-row"><div class="result-head"><strong>${d.title}</strong><span>${Math.round(s)}%</span></div><div class="bar"><span style="width:${s}%"></span></div><div class="small">${typeHelp(d)}</div><div class="interpret"><p>${levelText(d,s)}</p></div></div>`}).join('');
+  $('#resultsContent').innerHTML=`<div class="result-layout"><div class="card"><h3>Desempenho em tarefas</h3><p class="small">Percentual de acertos apenas nos itens desta aplicação.</p>${perf.length?rows(perf):'<div class="empty">Nenhuma tarefa de desempenho concluída.</div>'}</div><div class="card"><h3>Autorrelato e história</h3><p class="small">Quanto maior a barra, maior a frequência/presença dos itens marcados — não “maior probabilidade diagnóstica”.</p>${reports.length?rows(reports):'<div class="empty">Nenhum bloco de autorrelato concluído.</div>'}</div></div><div class="card" style="margin-top:18px"><h3>Como levar isso para uma avaliação</h3><p>O material mais útil não é o percentual sozinho. Anote 2 ou 3 exemplos reais dos domínios que chamaram atenção, quando começaram, com que frequência acontecem e que impacto têm em trabalho, estudo, relações, rotina ou autocuidado. Para hipótese de TEA ou TDAH, a história desde a infância e o diagnóstico diferencial com ansiedade, humor, sono e outras condições são especialmente importantes.</p></div>`;
+}
+
+$('#saveTest').addEventListener('click',calcAndSave); $('#backBtn').addEventListener('click',renderDashboard); $('#showDashboard').addEventListener('click',renderDashboard); $('#showResults').addEventListener('click',renderResults); $('#printResults').addEventListener('click',()=>{renderResults();setTimeout(()=>window.print(),100)}); $('#clearData').addEventListener('click',()=>{if(confirm('Apagar todas as respostas salvas neste navegador?')){Object.keys(state).forEach(k=>delete state[k]);persist();renderDashboard();}});
+renderDashboard();
+</script>
+</body>
+</html>
